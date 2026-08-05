@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python Bytecode & Cache Files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Saved Models & Heavy Files (Optional: remove if you want to push .pkl files)
+*.pkl
+
+# OS Specific Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Intelligence Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="dashboard-card">
+        
+        <!-- Header -->
+        <div class="header">
+            <h2>Sentiment Intelligence Dashboard</h2>
+            <p>Analyze single reviews or generate overall batch summary trends</p>
+        </div>
+
+        <!-- Tabs Header -->
+        <div class="tab-header">
+            <button class="tab-btn {% if not single_result and not single_error %}active{% endif %}" onclick="switchTab('batch')">
+                Batch Summary (CSV)
+            </button>
+            <button class="tab-btn {% if single_result or single_error %}active{% endif %}" onclick="switchTab('single')">
+                Single Review Test
+            </button>
+        </div>
+
+        <!-- TAB 1: BATCH CSV SUMMARY -->
+        <div id="tab-batch" class="tab-content {% if not single_result and not single_error %}active{% endif %}">
+            <div class="upload-section">
+                <form action="/analyze_csv" method="post" enctype="multipart/form-data">
+                    <label class="form-label">Upload CSV Dataset File:</label>
+                    <div class="input-group">
+                        <input type="file" name="file" accept=".csv" required>
+                        <button type="submit" class="btn btn-primary">Analyze Dataset</button>
+                    </div>
+                </form>
+            </div>
+
+            {% if total %}
+            <!-- Summary Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card bg-blue">
+                    <span>TOTAL REVIEWS</span>
+                    <h2>{{ total }}</h2>
+                </div>
+                <div class="stat-card bg-green">
+                    <span>POSITIVE</span>
+                    <h2>{{ pos }} <small>({{ pos_pct }}%)</small></h2>
+                </div>
+                <div class="stat-card bg-red">
+                    <span>NEGATIVE</span>
+                    <h2>{{ neg }} <small>({{ neg_pct }}%)</small></h2>
+                </div>
+            </div>
+
+            <!-- Chart Box -->
+            <div class="chart-container">
+                <h3>Overall Sentiment Distribution</h3>
+                <img src="data:image/png;base64,{{ chart }}" alt="Sentiment Chart">
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- TAB 2: INDIVIDUAL REVIEW TEST -->
+        <div id="tab-single" class="tab-content {% if single_result or single_error %}active{% endif %}">
+            <form action="/predict_single" method="post">
+                <label class="form-label">Enter Review Text:</label>
+                <textarea name="single_review" rows="4" placeholder="Type or paste a movie review here...">{{ single_review if single_review }}</textarea>
+                <button type="submit" class="btn btn-success">Analyze Review Sentiment</button>
+            </form>
+
+            {% if single_error %}
+                <div class="alert alert-error">{{ single_error }}</div>
+            {% endif %}
+
+            {% if single_result %}
+                <div class="result-container">
+                    <span class="sub-text">Predicted Sentiment</span>
+                    <div class="result-badge {% if 'Positive' in single_result %}positive{% else %}negative{% endif %}">
+                        {{ single_result }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+        if(tabName === 'batch') {
+            document.getElementById('tab-batch').classList.add('active');
+            event.target.classList.add('active');
+        } else {
+            document.getElementById('tab-single').classList.add('active');
+            event.target.classList.add('active');
+        }
+    }
+</script>
+
+</body>
+</html>
