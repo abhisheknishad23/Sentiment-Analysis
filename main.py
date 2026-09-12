@@ -23,7 +23,7 @@ def clean_text(text):
 def home():
     return render_template('index.html')
 
-# 1. Batch Analysis Route
+# Batch Analysis Route
 @app.route('/analyze_csv', methods=['POST'])
 def analyze_csv():
     if 'file' not in request.files or request.files['file'].filename == '':
@@ -55,7 +55,7 @@ def analyze_csv():
                            pos_pct=round(pos/total*100, 2), neg_pct=round(neg/total*100, 2), 
                            chart=chart_url)
 
-# 2. Individual Review Check Route
+# Individual Review Check Route
 @app.route('/predict_single', methods=['POST'])
 def predict_single():
     single_review = request.form.get('single_review', '')
