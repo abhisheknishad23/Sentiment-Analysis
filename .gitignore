@@ -11,7 +11,7 @@ __pycache__/
 .pytest_cache/
 
 # Saved Models & Heavy Files (Optional: remove if you want to push .pkl files)
-*.pkl
+
 
 # OS Specific Files
 .DS_Store
